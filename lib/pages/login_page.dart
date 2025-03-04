@@ -15,27 +15,37 @@ class _LoginPageState extends State<LoginPage> {
   final storage = FlutterSecureStorage();
 
   Future<void> _login() async {
-    final response = await http.post(
-      Uri.parse('http://localhost:8080/api/user/logIn'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'username': _usernameController.text,
-        'password': _passwordController.text,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      await storage.write(key: 'token', value: data['token']);
-      await storage.write(key: 'role', value: data['role'].toString());
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => MovieListPage()),
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost:8080/api/user/logIn'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'username': _usernameController.text.trim(),
+          'password': _passwordController.text.trim(),
+        }),
       );
-    } else {
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        // JWT 토큰과 역할(role) 저장
+        await storage.write(key: 'jwt', value: data['token']);
+        await storage.write(key: 'role', value: data['role'].toString());
+
+        // 영화 리스트 페이지로 이동
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MovieListScreen(pageNo: 1)),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(data['message'] ?? '로그인 실패')),
+        );
+      }
+    } catch (e) {
+      print("로그인 오류: $e");
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('로그인 실패')),
+        SnackBar(content: Text('네트워크 오류 발생')),
       );
     }
   }

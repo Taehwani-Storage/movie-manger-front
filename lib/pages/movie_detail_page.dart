@@ -24,7 +24,14 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
   }
 
   Future<void> fetchMovieDetails() async {
-    final response = await http.get(Uri.parse('http://localhost:8080/api/movie/showOne/${widget.movieId}'));
+    String? token = await storage.read(key: 'token');
+    final response = await http.get(
+        Uri.parse('http://localhost:8080/api/movie/showOne/${widget.movieId}'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+    );
     final role = await storage.read(key: 'role');
     setState(() {
       movie = response.statusCode == 200 ? jsonDecode(response.body) : null;

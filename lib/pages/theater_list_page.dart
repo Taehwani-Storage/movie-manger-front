@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class TheaterListPage extends StatefulWidget {
@@ -8,6 +9,7 @@ class TheaterListPage extends StatefulWidget {
 }
 
 class _TheaterListPageState extends State<TheaterListPage> {
+  final storage = FlutterSecureStorage();
   List<dynamic> theaters = [];
   int currentPage = 1;
 
@@ -18,11 +20,24 @@ class _TheaterListPageState extends State<TheaterListPage> {
   }
 
   Future<void> fetchTheaters() async {
-    final response = await http.get(Uri.parse('http://localhost:8080/api/theater/showAll/$currentPage'));
+    String? token = await storage.read(key: 'token');
+
+    final response = await http.get(
+      Uri.parse('http://localhost:8080/api/theater/showAll/$currentPage'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
     if (response.statusCode == 200) {
       setState(() {
         theaters = jsonDecode(response.body);
       });
+    } else if (response.statusCode == 403) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('접근 권한이 없습니다. 다시 로그인하세요.')),
+      );
+      Navigator.pushReplacementNamed(context, '/login');
     }
   }
 
