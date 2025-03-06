@@ -1,8 +1,8 @@
-import 'package:cinema_manager_front/pages/movie_list_page.dart';
+import 'package:cinema_manager_front/pages/movie/movie_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'pages/login_page.dart';
-import 'pages/register_page.dart';
+import 'pages/auth/login_page.dart';
+import 'pages/auth/register_page.dart';
 import 'pages/screening_list_page.dart';
 import 'pages/theater_list_page.dart';
 

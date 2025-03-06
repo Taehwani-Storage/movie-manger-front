@@ -63,7 +63,7 @@ class _MovieUpdateScreenState extends State<MovieUpdateScreen> {
           "runningTime": runningTime,
         },
       );
-      Navigator.pop(context); // 이전 화면으로 돌아가기
+      // Navigator.pop(context); // 이전 화면으로 돌아가기
     } catch (e) {
       print(e);
     }

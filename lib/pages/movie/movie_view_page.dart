@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:dio/dio.dart';
-import 'package:cinema_manager_front/pages/login_page.dart';
-import 'package:cinema_manager_front/pages/movie_list_page.dart';
-import 'package:cinema_manager_front/pages/movie_update_page.dart';
+import '../auth/login_page.dart';
+import '../movie/movie_list_page.dart';
+import '../movie/movie_update_page.dart';
 
 class MovieViewScreen extends StatefulWidget {
   final int movieId;
