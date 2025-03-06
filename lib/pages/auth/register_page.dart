@@ -37,7 +37,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
       final data = jsonDecode(response.body);
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('회원가입 완료!')),
         );

@@ -118,6 +118,23 @@ class _MovieListScreenState extends State<MovieListScreen> {
           ),
         Container(
           padding: EdgeInsets.symmetric(vertical: 10),
+          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            MaterialButton(
+                onPressed: () => _changePage(_startPage), child: Text("<<")),
+            for (int i = _startPage; i <= _endPage; i++)
+              MaterialButton(
+                  onPressed: () => _changePage(i),
+                  child: Text("$i",
+                      style: TextStyle(
+                          fontWeight: _currentPage == i
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                          color: _currentPage == i
+                              ? Colors.red
+                              : Colors.black54))),
+            MaterialButton(
+                onPressed: () => _changePage(_maxPage), child: Text(">>")),
+          ]),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [

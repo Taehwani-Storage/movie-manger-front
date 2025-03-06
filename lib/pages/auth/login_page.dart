@@ -69,8 +69,8 @@ class _LoginPageState extends State<LoginPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "🎬",
-              style: TextStyle(fontSize: 80),
+              "Cinema Worlds 🎬",
+              style: TextStyle(fontSize: 60),
             ),
             SizedBox(height: 20),
             _buildInputField("아이디", _usernameController, false),

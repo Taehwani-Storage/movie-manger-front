@@ -41,7 +41,7 @@ class _MovieViewScreenState extends State<MovieViewScreen> {
     final response = await _dio
         .get("http://localhost:8080/api/movie/showOne/${widget.movieId}");
     setState(() {
-      _movie = response.data["movieDTO"];
+      _movie = response.data["movie"];
     });
   }
 
