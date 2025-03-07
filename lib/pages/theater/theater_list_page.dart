@@ -2,64 +2,59 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../service/nav_bar.dart';
-
 import '../auth/login_page.dart';
 import '../service/pagination.dart';
 
-class MovieListScreen extends StatefulWidget {
+class TheaterListScreen extends StatefulWidget {
   final int pageNo;
 
-  MovieListScreen({required this.pageNo});
+  TheaterListScreen({required this.pageNo});
 
   @override
-  _MovieListScreenState createState() => _MovieListScreenState();
+  _TheaterListScreenState createState() => _TheaterListScreenState();
 }
 
-class _MovieListScreenState extends State<MovieListScreen> {
+class _TheaterListScreenState extends State<TheaterListScreen> {
   final storage = FlutterSecureStorage();
   final Dio _dio = Dio();
-  List<dynamic> _movies = [];
+  List<dynamic> _theaters = [];
   bool _isLoading = true;
   int _currentPage = 1;
   int _startPage = 1;
   int _endPage = 5;
   int _maxPage = 5;
   String? token;
-  int? role;
 
   @override
   void initState() {
     super.initState();
-    _getMovies();
+    _getTheaters();
   }
 
-  Future<void> _getMovies() async {
+  Future<void> _getTheaters() async {
     try {
       token = await storage.read(key: "jwt");
-      String? roleStr = await storage.read(key: "role");
-      role = roleStr != null ? int.tryParse(roleStr) : null;
-
       _currentPage = widget.pageNo;
       if (token == null) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => LoginPage()));
       }
-      await _getMoviesByPageNo(_currentPage);
+      await _getTheatersByPageNo(_currentPage);
     } catch (e) {
       print(e);
     }
   }
 
-  Future<void> _getMoviesByPageNo(int pageNo) async {
+  Future<void> _getTheatersByPageNo(int pageNo) async {
     setState(() {
       _isLoading = true;
     });
     try {
       _dio.options.headers["Authorization"] = "Bearer $token";
       final response =
-      await _dio.get('http://localhost:8080/api/movie/showAll/$pageNo');
+      await _dio.get('http://localhost:8080/api/theater/showAll/$pageNo');
       setState(() {
-        _movies = response.data['list'];
+        _theaters = response.data['list'];
         _startPage = response.data['startPage'];
         _endPage = response.data['endPage'];
         _currentPage = response.data['currentPage'];
@@ -76,7 +71,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
 
   void _changePage(int pageNo) {
     if (pageNo >= 1 && pageNo <= _maxPage) {
-      _getMoviesByPageNo(pageNo);
+      _getTheatersByPageNo(pageNo);
     }
   }
 
@@ -84,21 +79,19 @@ class _MovieListScreenState extends State<MovieListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: Text('영화 리스트')),
+      appBar: AppBar(title: Text('극장 리스트')),
       body: Column(children: [
         Expanded(
           child: _isLoading
               ? Center(child: CircularProgressIndicator())
               : ListView.builder(
-            itemCount: _movies.length,
+            itemCount: _theaters.length,
             itemBuilder: (context, index) {
-              final movie = _movies[index];
+              final theater = _theaters[index];
               return ListTile(
-                leading: Icon(Icons.movie, color: Colors.indigoAccent),
-                title: Text(movie["title"], style: TextStyle(
-                    fontSize: 18, fontWeight: FontWeight.bold)),
-                subtitle: Text("${movie['director']} - ${movie['runningTime']}",
-                    style: TextStyle(color: Colors.grey[600])),
+                leading: Icon(Icons.theater_comedy, color: Colors.indigoAccent),
+                title: Text(theater["name"], style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                subtitle: Text(theater["address"], style: TextStyle(color: Colors.grey[600])),
               );
             },
           ),
@@ -112,7 +105,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
           onPageChange: _changePage,
         ),
         // 네비게이션 바
-        NavBar(selectedPage: "영화")
+        NavBar(selectedPage: "극장")
       ]),
     );
   }

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'pages/auth/login_page.dart';
 import 'pages/auth/register_page.dart';
-import 'pages/screening_list_page.dart';
-import 'pages/theater_list_page.dart';
+import 'pages/screening/screening_list_page.dart';
+import 'pages/theater/theater_list_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,8 +31,8 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),
         '/movies': (context) => MovieListScreen(pageNo: 1),
-        '/theaters': (context) => TheaterListPage(),
-        '/screenings': (context) => ScreeningListPage(),
+        '/theaters': (context) => TheaterListScreen(pageNo: 1),
+        '/screenings': (context) => ScreeningListScreen(pageNo: 1)
       },
     );
   }
