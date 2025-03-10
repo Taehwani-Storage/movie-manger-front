@@ -1,10 +1,12 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import '../service/nav_bar.dart';
 
 import '../auth/login_page.dart';
+import '../service/nav_bar.dart';
 import '../service/pagination.dart';
+import 'movie_detail_page.dart';
 
 class MovieListScreen extends StatefulWidget {
   final int pageNo;
@@ -95,11 +97,17 @@ class _MovieListScreenState extends State<MovieListScreen> {
               final movie = _movies[index];
               return ListTile(
                 leading: Icon(Icons.movie, color: Colors.indigoAccent),
-                title: Text(movie["title"], style: TextStyle(
-                    fontSize: 18, fontWeight: FontWeight.bold)),
+                title: Text(movie["title"], style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 subtitle: Text("${movie['director']} - ${movie['runningTime']}",
                     style: TextStyle(color: Colors.grey[600])),
-              );
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MovieDetailScreen(movieNo: movie['movieNo']),
+                      ),
+                  );
+                });
             },
           ),
         ),
